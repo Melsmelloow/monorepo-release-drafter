@@ -1,12 +1,8 @@
 name-template: "Release FE"
-tag-template: "release-fe"
-filter-by-commitish: true
+tag-prefix: "fe-"
 
 include-labels:
   - frontend
-
-include-paths:
-  - frontend/**
 
 categories:
   - title: "🚀 Features"
