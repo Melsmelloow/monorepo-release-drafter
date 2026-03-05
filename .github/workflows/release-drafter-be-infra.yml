@@ -47,6 +47,6 @@ jobs:
         uses: release-drafter/release-drafter@v6
         with:
             config-name: release-drafter-be-infra.yml
-            tag: release-fe
+            tag: release-be
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
