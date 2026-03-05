@@ -5,8 +5,8 @@ on:
     branches:
       - 'release/*'
     paths:
-      - '**/backend'
-      - '**/infra'
+      - 'backend/**'
+      - 'infra/**'
     
 
 jobs:

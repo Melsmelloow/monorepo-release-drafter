@@ -1,40 +1,44 @@
+name-template: "Release BE"
+tag-template: "release-be-$RESOLVED_VERSION"
+
 categories:
-  - title: '🚀 Features'
+  - title: "🚀 Features"
     labels:
-      - 'feat'
-      - 'task'
-      - 'chore'
-  - title: '🐛 Bug Fixes'
-    labels:
-      - 'fix'
-      - 'bugfix'
-      - 'bug'
-      
-  - title: '⚙️ Workflow'
-    labels:
-      - 'ci'
+      - "feat"
+      - "task"
+      - "chore"
 
-  - title: '🛠 Infra'
+  - title: "🐛 Bug Fixes"
     labels:
-      - 'infra'
+      - "fix"
+      - "bugfix"
+      - "bug"
 
-change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
+  - title: "⚙️ Workflow"
+    labels:
+      - "ci"
+
+  - title: "🛠 Infra"
+    labels:
+      - "infra"
+
+change-template: "- $TITLE @$AUTHOR (#$NUMBER)"
 change-title-escapes: '\<*_&'
 
 autolabeler:
-  - label: 'fix'
+  - label: "fix"
     title:
-      - '/fix:/i'
+      - "/fix:/i"
 
-  - label: 'feat'
+  - label: "feat"
     title:
-      - '/feat:/i'
+      - "/feat:/i"
 
-  - label: 'task'
+  - label: "task"
     title:
-      - '/task:/i'
+      - "/task:/i"
 
 template: |
-  ## Changes
+  ## Backend & Infrastructure Changes
 
   $CHANGES
