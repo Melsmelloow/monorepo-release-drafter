@@ -33,25 +33,20 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             https://api.github.com/repos/${{ github.repository }}/releases)
 
-            echo "====== RAW RELEASES JSON ======"
-            echo "$RELEASES"
-            echo "================================"
-
             echo "====== RELEASE SUMMARY ======"
             echo "$RELEASES" | jq -r '.[] | "\(.id) | \(.name) | \(.tag_name) | draft=\(.draft) | created=\(.created_at)"'
             echo "============================="
 
             OLD_IDS=$(echo "$RELEASES" | jq -r '
-            [.[] | select(.draft == true and (.tag_name | startswith("fe-")))]
+            [.[] | select(.draft == true and .tag_name == "release-fe")]
             | sort_by(.created_at)
             | reverse
             | .[1:]
             | .[].id
             ')
 
-            echo "====== OLD DRAFT IDS ======"
+            echo "Old FE draft IDs:"
             echo "$OLD_IDS"
-            echo "==========================="
 
             for ID in $OLD_IDS; do
             echo "Deleting old FE draft release ID: $ID"
