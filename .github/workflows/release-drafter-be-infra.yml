@@ -17,14 +17,6 @@ jobs:
       pull-requests: read
 
     steps:
-      - name: Run Release Drafter
-        uses: release-drafter/release-drafter@v6
-        with:
-            config-name: release-drafter-be-infra.yml
-            tag: release-be
-        env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Cleanup duplicate BE drafts
         run: |
             echo "Fetching BE draft releases..."
@@ -34,18 +26,27 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             https://api.github.com/repos/${{ github.repository }}/releases)
 
-            OLD_IDS=$(echo "$RELEASES" | jq -r '
-            [.[] | select(.draft == true and (.tag_name | startswith("be-")))]
-            | sort_by(.created_at)
-            | reverse
-            | .[1:]
-            | .[].id
+            echo "====== RELEASE SUMMARY ======"
+            echo "$RELEASES" | jq -r '.[] | "\(.id) | \(.name) | \(.tag_name) | draft=\(.draft)"'
+            echo "============================="
+
+            IDS=$(echo "$RELEASES" | jq -r '
+                .[] | select(.draft == true and .tag_name == "release-be") | .id
             ')
 
-            for ID in $OLD_IDS; do
-            echo "Deleting old BE draft ID: $ID"
-            curl -s -X DELETE \
+            for ID in $IDS; do
+                echo "Deleting existing BE draft ID: $ID"
+                curl -s -X DELETE \
                 -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
                 -H "Accept: application/vnd.github+json" \
                 https://api.github.com/repos/${{ github.repository }}/releases/$ID
             done
+
+            
+      - name: Run Release Drafter
+        uses: release-drafter/release-drafter@v6
+        with:
+            config-name: release-drafter-be-infra.yml
+            tag: release-fe
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
