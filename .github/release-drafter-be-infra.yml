@@ -5,6 +5,12 @@ filter-by-commitish: true
 include-labels:
   - backend
   - infra
+  - ci
+
+include-paths:
+  - backend/**
+  - infra/**
+  - .github/**
 
 categories:
   - title: "🚀 Features"
