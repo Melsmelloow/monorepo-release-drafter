@@ -1,6 +1,6 @@
 name-template: "Release BE"
 tag-template: "release-be"
-
+filter-by-commitish: true
 
 include-labels:
   - backend
