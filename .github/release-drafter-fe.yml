@@ -1,5 +1,8 @@
 name-template: "Release FE"
-tag-template: "release-fe-$RESOLVED_VERSION"
+tag-prefix: "fe-"
+
+include-labels:
+  - frontend
 
 categories:
   - title: "🚀 Features"
