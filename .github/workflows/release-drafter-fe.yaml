@@ -16,29 +16,34 @@ jobs:
       pull-requests: read
 
     steps:
-      - name: Check if FE draft release exists
+      - name: Check if FE draft exists
         id: check_release
         run: |
-          EXISTING=$(gh release list --limit 100 --json name,isDraft \
-            --jq '.[] | select(.name=="Release FE" and .isDraft==true) | .name')
+          RELEASE_ID=$(curl -s \
+          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          https://api.github.com/repos/${{ github.repository }}/releases \
+          | jq '.[] | select(.draft == true and .name == "Release FE") | .id')
 
-          if [ -z "$EXISTING" ]; then
+          if [ -z "$RELEASE_ID" ]; then
             echo "exists=false" >> $GITHUB_OUTPUT
           else
             echo "exists=true" >> $GITHUB_OUTPUT
+            echo "release_id=$RELEASE_ID" >> $GITHUB_OUTPUT
           fi
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Create FE draft release if missing
+      - name: Create FE draft if missing
         if: steps.check_release.outputs.exists == 'false'
         run: |
-          gh release create release-fe \
-            --title "Release FE" \
-            --draft \
-            --notes "Frontend Changes"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          curl -X POST \
+          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          -H "Accept: application/vnd.github+json" \
+          https://api.github.com/repos/${{ github.repository }}/releases \
+          -d '{
+            "tag_name": "release-fe",
+            "name": "Release FE",
+            "draft": true,
+            "prerelease": false
+          }'
 
       - name: Run Release Drafter
         uses: release-drafter/release-drafter@v6
