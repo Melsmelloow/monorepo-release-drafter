@@ -5,6 +5,9 @@ filter-by-commitish: true
 include-labels:
   - frontend
 
+include-paths:
+  - frontend/**
+
 categories:
   - title: "🚀 Features"
     labels:
