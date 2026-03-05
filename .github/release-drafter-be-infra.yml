@@ -1,6 +1,10 @@
 name-template: "Release BE"
 tag-template: "release-be-$RESOLVED_VERSION"
 
+include-labels:
+  - backend
+  - infra
+
 categories:
   - title: "🚀 Features"
     labels:
