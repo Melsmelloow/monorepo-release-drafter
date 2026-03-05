@@ -1,5 +1,5 @@
 name-template: "Release BE"
-tag-prefix: "be-"
+tag-template: "release-be"
 
 include-labels:
   - backend
