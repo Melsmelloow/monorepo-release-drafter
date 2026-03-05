@@ -1,5 +1,5 @@
 name-template: "Release FE"
-tag-template: "release-fe"
+tag-prefix: "fe-"
 
 include-labels:
   - frontend
