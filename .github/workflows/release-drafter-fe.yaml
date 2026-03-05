@@ -3,20 +3,45 @@ name: Release Drafter - FE
 on:
   push:
     branches:
-      - 'release/*'
+      - "release/*"
     paths:
-      - 'frontend/**'
-    
+      - "frontend/**"
 
 jobs:
   update_release_draft:
     runs-on: ubuntu-latest
+
     permissions:
       contents: write
       pull-requests: read
 
     steps:
-      - uses: release-drafter/release-drafter@v6
+      - name: Check if FE draft release exists
+        id: check_release
+        run: |
+          EXISTING=$(gh release list --limit 100 --json name,isDraft \
+            --jq '.[] | select(.name=="Release FE" and .isDraft==true) | .name')
+
+          if [ -z "$EXISTING" ]; then
+            echo "exists=false" >> $GITHUB_OUTPUT
+          else
+            echo "exists=true" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create FE draft release if missing
+        if: steps.check_release.outputs.exists == 'false'
+        run: |
+          gh release create release-fe \
+            --title "Release FE" \
+            --draft \
+            --notes "Frontend Changes"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run Release Drafter
+        uses: release-drafter/release-drafter@v6
         with:
           config-name: release-drafter-fe.yml
         env:
