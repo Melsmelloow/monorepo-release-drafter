@@ -1,0 +1,24 @@
+name: Release Drafter - BE/INFRA
+
+on:
+  push:
+    branches:
+      - 'release/*'
+    paths:
+      - '**/backend'
+      - '**/infra'
+    
+
+jobs:
+  update_release_draft:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: read
+
+    steps:
+      - uses: release-drafter/release-drafter@v6
+        with:
+          config-name: release-drafter-be-infra.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

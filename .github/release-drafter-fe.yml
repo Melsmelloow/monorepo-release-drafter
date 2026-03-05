@@ -1,0 +1,32 @@
+categories:
+  - title: '🚀 Features'
+    labels:
+      - 'feat'
+      - 'task'
+      - 'chore'
+  - title: '🐛 Bug Fixes'
+    labels:
+      - 'fix'
+      - 'bugfix'
+      - 'bug'
+
+change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
+change-title-escapes: '\<*_&'
+
+autolabeler:
+  - label: 'fix'
+    title:
+      - '/fix:/i'
+
+  - label: 'feat'
+    title:
+      - '/feat:/i'
+
+  - label: 'task'
+    title:
+      - '/task:/i'
+
+template: |
+  ## Changes
+
+  $CHANGES
