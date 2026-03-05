@@ -23,3 +23,26 @@ jobs:
             tag: release-fe
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Cleanup duplicate FE drafts
+        run: |
+            echo "Fetching FE draft releases..."
+
+            RELEASES=$(curl -s \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            https://api.github.com/repos/${{ github.repository }}/releases)
+
+            IDS=$(echo "$RELEASES" | jq -r '
+            [.[] | select(.draft == true and .name == "Release FE")]
+            | sort_by(.created_at)
+            | reverse
+            | .[1:]
+            | .[].id
+            ')
+
+            for ID in $IDS; do
+            echo "Deleting old draft release ID: $ID"
+            curl -X DELETE \
+                -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+                https://api.github.com/repos/${{ github.repository }}/releases/$ID
+            done
