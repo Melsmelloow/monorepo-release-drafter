@@ -30,19 +30,35 @@ jobs:
 
             RELEASES=$(curl -s \
             -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
             https://api.github.com/repos/${{ github.repository }}/releases)
 
-            IDS=$(echo "$RELEASES" | jq -r '
-            [.[] | select(.draft == true and .name == "Release FE")]
+            echo "====== RAW RELEASES JSON ======"
+            echo "$RELEASES"
+            echo "================================"
+
+            echo "====== RELEASE SUMMARY ======"
+            echo "$RELEASES" | jq -r '.[] | "\(.id) | \(.name) | \(.tag_name) | draft=\(.draft) | created=\(.created_at)"'
+            echo "============================="
+
+            OLD_IDS=$(echo "$RELEASES" | jq -r '
+            [.[] | select(.draft == true and (.tag_name | startswith("fe-")))]
             | sort_by(.created_at)
             | reverse
             | .[1:]
             | .[].id
             ')
 
-            for ID in $IDS; do
-            echo "Deleting old draft release ID: $ID"
-            curl -X DELETE \
+            echo "====== OLD DRAFT IDS ======"
+            echo "$OLD_IDS"
+            echo "==========================="
+
+            for ID in $OLD_IDS; do
+            echo "Deleting old FE draft release ID: $ID"
+            curl -s -X DELETE \
                 -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+                -H "Accept: application/vnd.github+json" \
                 https://api.github.com/repos/${{ github.repository }}/releases/$ID
             done
+
+            echo "Cleanup completed."
