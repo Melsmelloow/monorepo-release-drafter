@@ -16,8 +16,10 @@ jobs:
       pull-requests: read
 
     steps:
-      - uses: release-drafter/release-drafter@v6
+      - name: Run Release Drafter
+        uses: release-drafter/release-drafter@v6
         with:
-          config-name: release-drafter-fe.yml
+            config-name: release-drafter-fe.yml
+            tag: release-fe
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
